@@ -28,6 +28,26 @@ router.post('/rest/api/run', cache('5 minutes'), (req, res, next) => {
 });
 
 
+router.post('/rest/api/getOneIssueChangelog', (req, res, next) => {
+    let options = {
+        rejectUnauthorized: false,
+        url: 'https://jira.nexity.fr/rest/api/2/issue/'+ req.body.issue_key +'?expand=changelog&fields=""',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': req.body.token
+        }
+    };
+    function callback(error, response, body) {
+        if (!error && response.statusCode == 200) {
+            var info = JSON.parse(body);
+            res.send(info);
+        }
+    }
+
+    request(options, callback);
+});
+
+
 router.post('/rest/api/build', cache('5 minutes'), (req, res, next) => {
     let options = {
         rejectUnauthorized: false,
