@@ -11,7 +11,27 @@ let cache = apicache.middleware
 router.post('/rest/api/run', cache('5 minutes'), (req, res, next) => {
     let options = {
         rejectUnauthorized: false,
-        url: 'https://jira.nexity.fr/rest/api/2/search?jql=project=' + req.body.applicationId + ' AND status not in ("12. Fermée", Abandonnée, "11. Livrée en Production") &fields=components ,customfield_10582, summary, status, customfield_10525, customfield_10542, customfield_10501, customfield_10520, customfield_10578, customfield_10559, customfield_10608,customfield_10577,customfield_10545, customfield_10600, tpsEstimeIssue, customfield_10544, aggregatetimespent, aggregatetimeestimate, aggregatetimeoriginalestimate, issuetype, customfield_10580, customfield_10587, customfield_10578, customfield_10570, customfield_10571, customfield_10593, customfield_10603, customfield_10607, customfield_10538, duedate,  name_u155, assignee,  status, &maxResults=-1',
+        url: 'https://jira.nexity.fr/rest/api/2/search?jql=project=' + req.body.applicationId + ' AND status not in ("12. Fermée", Abandonnée, "11. Livrée en Production") &fields=components ,customfield_10582, summary, status, customfield_10525, customfield_10542, customfield_10501, customfield_10520, customfield_10578, customfield_10559, customfield_10608,customfield_10577,customfield_10545, customfield_10600, tpsEstimeIssue, customfield_10544, aggregatetimespent, aggregatetimeestimate, aggregatetimeoriginalestimate, issuetype, customfield_10580, customfield_10587, customfield_10578, customfield_10570, customfield_10571, customfield_10593, customfield_10603, customfield_10607, customfield_10538, duedate,  name_u155, assignee,  status, &maxResults=-1&expand=changelog',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': req.body.token
+        }
+    };
+    function callback(error, response, body) {
+        if (!error && response.statusCode == 200) {
+            var info = JSON.parse(body);
+            res.send(info);
+        }
+    }
+
+    request(options, callback);
+});
+
+
+router.post('/rest/api/runWithChangelog', cache('5 minutes'), (req, res, next) => {
+    let options = {
+        rejectUnauthorized: false,
+        url: 'https://jira.nexity.fr/rest/api/2/search?jql=project=' + req.body.applicationId + ' AND status not in ("12. Fermée", Abandonnée, "11. Livrée en Production")&maxResults=-1&expand=changelog&fields=""',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': req.body.token
