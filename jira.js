@@ -31,7 +31,7 @@ router.post('/rest/api/run', cache('5 minutes'), (req, res, next) => {
 router.post('/rest/api/runWithChangelog', cache('5 minutes'), (req, res, next) => {
     let options = {
         rejectUnauthorized: false,
-        url: 'https://jira.nexity.fr/rest/api/2/search?jql=project=' + req.body.applicationId + ' AND status not in ("12. Fermée", Abandonnée, "11. Livrée en Production")&maxResults=-1&expand=changelog&fields="components"',
+        url: 'https://jira.nexity.fr/rest/api/2/search?jql=project=' + req.body.applicationId + ' AND "Epic Link" in (SIG-1) AND status not in ("12. Fermée", Abandonnée, "11. Livrée en Production")&maxResults=-1&expand=changelog&fields=""',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': req.body.token
